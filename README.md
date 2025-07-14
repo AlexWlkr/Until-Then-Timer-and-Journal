@@ -1,13 +1,13 @@
 # countdown-site
 This is a small front-end web project built to help me stay motivated as I near the end of my full-time job and fully dedicate myself to coding.
 
-#Project Purpose
+- Project Purpose
 
 This project displays a countdown timer to July 30, 2025 — my final day at work. Below the timer, there's a reflection area where I can journal my thoughts day by day. Each reflection is saved locally in the browser and timestamped.
 
 This is a personal, beginner-friendly build designed to practice key web development skills while also serving as a motivational tool.
 
-#Features
+- Features
 
 Live countdown timer that updates every second.
 
@@ -17,7 +17,7 @@ Reflections are saved to localStorage and persist across page reloads.
 
 When the countdown reaches zero, a celebration message appears with visual effects (like CSS-only confetti).
 
-#Built With
+- Built With
 
 HTML5
 
@@ -25,7 +25,7 @@ CSS3 (with custom fonts and layout styling)
 
 Vanilla JavaScript (DOM manipulation, event listeners, localStorage, time/date calculations)
 
-#How AI Helped
+- How AI Helped
 
 I built this project with significant support from ChatGPT. As I'm still in the learning phase of my journey, I asked ChatGPT to:
 
@@ -41,7 +41,7 @@ AI didn’t write this whole thing for me. I had to understand each line, integr
 
 This isn’t just a code demo — it’s a milestone.
 
-#What I Learned
+- What I Learned
 
 How to build a countdown using setInterval() and Date
 
