@@ -1,3 +1,13 @@
+window.addEventListener("DOMContentLoaded", function() {
+    const savedReflections = JSON.parse(localStorage.getItem("reflections")) || [];
+
+savedReflections.forEach(entry => {
+  const reflectionItem = document.createElement("div");
+  reflectionItem.classList.add("reflection-entry");
+  reflectionItem.innerHTML = `<p>${entry.text}</p><small>${entry.timestamp}</small>`;
+  document.getElementById("reflection-list").appendChild(reflectionItem);
+});
+
 const now = new Date();
 console.log(now);
 
@@ -26,3 +36,21 @@ function updateCountdown() {
 }
 
 setInterval(updateCountdown, 1000);
+
+document.getElementById("submit-reflection").addEventListener("click", function() {
+const reflectionText = document.getElementById("reflection").value;
+  // Prevent empty reflections
+  if (reflectionText.trim() === "") return;
+
+  const timestamp = new Date().toLocaleString();
+
+  const reflectionItem = document.createElement("div");
+  reflectionItem.classList.add("reflection-entry");
+  reflectionItem.innerHTML = `<p>${reflectionText}</p><small>${timestamp}</small>`;
+
+  document.getElementById("reflection-list").appendChild(reflectionItem);
+
+  // Clear the textarea
+  document.getElementById("reflection").value = "";
+});
+});
