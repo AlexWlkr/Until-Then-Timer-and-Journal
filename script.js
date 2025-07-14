@@ -50,7 +50,12 @@ const reflectionText = document.getElementById("reflection").value;
 
   document.getElementById("reflection-list").appendChild(reflectionItem);
 
-  // Clear the textarea
+    // FIX: Save to localStorage
+  let reflections = JSON.parse(localStorage.getItem("reflections")) || [];
+  reflections.push({ text: reflectionText, timestamp });
+  localStorage.setItem("reflections", JSON.stringify(reflections));
+
+  // Clear the text area
   document.getElementById("reflection").value = "";
 });
 });
