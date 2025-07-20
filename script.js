@@ -1,4 +1,6 @@
 window.addEventListener("DOMContentLoaded", function () {
+   let countdownInterval;
+
   // Load reflections from localStorage
   const savedReflections = JSON.parse(localStorage.getItem("reflections")) || [];
   savedReflections.forEach(entry => {
@@ -38,8 +40,10 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   // Start the countdown loop
+if (countdownDate) {
   updateCountdown();
-  setInterval(updateCountdown, 1000);
+  countdownInterval = setInterval(updateCountdown, 1000);
+}
 
   // Reflection submit
   document.getElementById("submit-reflection").addEventListener("click", function () {
@@ -67,8 +71,32 @@ window.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("countdownDate", countdownDate.toString());
     updateCountdown();
   });
-  document.getElementById("clear-timer").addEventListener("click", function () {
-  localStorage.clear(); // Clears timer + reflections + anything else saved
-  location.reload();    // Refreshes the page so it loads as new
+
+  // Clear timer and reflections
+document.getElementById("clear-timer").addEventListener("click", function () {
+  // Clear all saved data
+  localStorage.clear();
+
+  // Stop the countdown timer from running
+  clearInterval(countdownInterval);
+
+  // Set countdownDate to null to stop updateCountdown() from running
+  countdownDate = null;
+
+  // Reset the timer display to 00
+  document.getElementById("days").textContent = "00";
+  document.getElementById("hours").textContent = "00";
+  document.getElementById("minutes").textContent = "00";
+
+  // Clear reflections and input box
+  document.getElementById("reflection-list").innerHTML = "";
+  document.getElementById("reflection").value = "";
+
+  //  Clear the date input field
+  const dateInput = document.getElementById("countdown-input");
+  if (dateInput) {
+    dateInput.value = "";
+  }
 });
+
 });
