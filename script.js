@@ -31,14 +31,13 @@ function updateCountdown() {
   const countdownDate = new Date("July 30, 2025 18:00:00");
   const difference = countdownDate - now;
 
-  // do the math for days/hours/minutes again
-  // update the DOM again
 }
 
 setInterval(updateCountdown, 1000);
 
 document.getElementById("submit-reflection").addEventListener("click", function() {
 const reflectionText = document.getElementById("reflection").value;
+
   // Prevent empty reflections
   if (reflectionText.trim() === "") return;
 
@@ -50,7 +49,7 @@ const reflectionText = document.getElementById("reflection").value;
 
   document.getElementById("reflection-list").appendChild(reflectionItem);
 
-    // FIX: Save to localStorage
+    // Save to localStorage
   let reflections = JSON.parse(localStorage.getItem("reflections")) || [];
   reflections.push({ text: reflectionText, timestamp });
   localStorage.setItem("reflections", JSON.stringify(reflections));
