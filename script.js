@@ -10,13 +10,16 @@ window.addEventListener("DOMContentLoaded", function () {
     document.getElementById("reflection-list").appendChild(reflectionItem);
   });
 
-  // Load stored countdown target date
-  let countdownDate = localStorage.getItem("countdownDate");
-  if (countdownDate) {
-    countdownDate = new Date(countdownDate);
-  } else {
-    countdownDate = new Date("July 30, 2025 18:00:00"); // fallback default
+  // and validate saved countdown date from localStorage
+let countdownDate = null;
+const storedDate = localStorage.getItem("countdownDate");
+
+if (storedDate) {
+  const parsedDate = new Date(storedDate);
+  if (!isNaN(parsedDate.getTime())) {
+    countdownDate = parsedDate;
   }
+}
 
   // Countdown update function
   function updateCountdown() {
