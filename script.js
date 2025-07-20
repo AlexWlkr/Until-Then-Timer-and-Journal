@@ -67,4 +67,8 @@ window.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("countdownDate", countdownDate.toString());
     updateCountdown();
   });
+  document.getElementById("clear-timer").addEventListener("click", function () {
+  localStorage.clear(); // Clears timer + reflections + anything else saved
+  location.reload();    // Refreshes the page so it loads as new
+});
 });

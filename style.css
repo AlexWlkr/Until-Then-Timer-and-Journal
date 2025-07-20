@@ -60,6 +60,10 @@ h3 {
   background-color: #f4a261; 
 }
 
+#clear-timer {
+  margin-top: 0.5rem;
+}
+
 
 /* COUNTDOWN CONTAINER */
 #countdown-container {
