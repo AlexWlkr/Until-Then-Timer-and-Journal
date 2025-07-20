@@ -39,22 +39,25 @@ h3 {
       font-size: 1rem;
 }
 
-/* TIMER SETTER */
-
-
 /* BUTTONS */
 .btn {
-    font-weight: 600;
-    transition: all 300ms ease;
-    padding: 0.5rem;
-    width: 8rem;
-    border-radius: 1rem;
+     font-weight: 600;
+  transition: all 300ms ease;
+  padding: 0.5rem;
+  width: 8rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  border: none;
 }
 
 .btn-color-1  {
-    border: #d8e2dc 0.1rem solid;
-    background-color: #e8e8e4;
-margin-bottom: 0.75rem;
+  background-color: #e8e8e4;
+  border: 0.1rem solid #d8e2dc;
+  margin-bottom: 0.75rem;
+}
+
+.btn-color-1:hover {
+  background-color: #f4a261; 
 }
 
 
@@ -105,22 +108,6 @@ margin-bottom: 0.75rem;
   border: none;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   resize: vertical;
-}
-
-#submit-reflection {
-  align-self: flex-end;
-  padding: 0.6rem 1.2rem;
-  background-color: #2d7ff9;
-  color: white;
-  font-weight: 500;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-#submit-reflection:hover {
-  background-color: #1a63d8;
 }
 
 /* REFLECTION LIST */
