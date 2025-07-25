@@ -34,5 +34,7 @@ I’m Alex Walker — a digital strategist turned frontend developer with a mast
 
 Let’s build digital tools that help people feel more grounded, supported, and seen.
 
+This project was built independently with support from ChatGPT as a learning and debugging tool. Every line of code was reviewed and customized as part of my frontend development practice.
+
 —
 Alex Walker
