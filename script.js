@@ -5,24 +5,44 @@ hasCelebrated = false;
 
  //alarm helpers
 function playAlarm() {
-const alarmEl = document.getElementById("alarm");
-   if (!alarmEl) return;
-   alarmEl.currentTime = 0;
-   alarmEl.play().catch(() => {});
- }
+  const alarmEl = document.getElementById("alarm");
+  if (!alarmEl) {
+    console.warn("No <audio id='alarm'> element found.");
+    return;
+  }
+  alarmEl.muted = false;      // ensure not muted
+  alarmEl.volume = 1;         // ensure audible (adjust if needed)
+  alarmEl.currentTime = 0;
+
+  const p = alarmEl.play();
+  if (p && typeof p.catch === "function") {
+    p.catch(err => console.warn("Alarm play() blocked or failed:", err));
+  }
+}
 
  //prime audio on user gesture
- function primeAlarmAudio() {
-   const alarmEl = document.getElementById("alarm");
+function primeAlarmAudio() {
+  const alarmEl = document.getElementById("alarm");
   if (!alarmEl) return;
-   const prevVol = alarmEl.volume;
-   alarmEl.volume = 0;
-   alarmEl.play().then(() => {
-     alarmEl.pause();
-     alarmEl.currentTime = 0;
-     alarmEl.volume = prevVol;
-   }).catch(() => {});
- }
+
+  // Try to load metadata
+  alarmEl.load();
+
+  // Near-silent blip for ~100ms, then pause
+  const prevVol = alarmEl.volume ?? 1;
+  alarmEl.muted = false;
+  alarmEl.volume = Math.min(prevVol, 0.01);
+
+  alarmEl.play().then(() => {
+    setTimeout(() => {
+      alarmEl.pause();
+      alarmEl.currentTime = 0;
+      alarmEl.volume = prevVol;
+    }, 120);
+  }).catch(err => {
+    console.warn("Prime failed (likely no user gesture yet):", err);
+  });
+}
 
   // Load reflections from localStorage
   const savedReflections = JSON.parse(localStorage.getItem("reflections")) || [];
