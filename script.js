@@ -28,19 +28,19 @@ const alarmEl = document.getElementById("alarm");
   alarmEl.load();
 
   // Near-silent blip for ~100ms, then pause
-  const prevVol = alarmEl.volume ?? 1;
-  alarmEl.muted = false;
-  alarmEl.volume = Math.min(prevVol, 0.01);
-
-  alarmEl.play().then(() => {
-    setTimeout(() => {
-      alarmEl.pause();
-      alarmEl.currentTime = 0;
-      alarmEl.volume = prevVol;
-    }, 120);
-  }).catch(err => {
-    console.warn("Prime failed (likely no user gesture yet):", err);
-  });
+ const prevVol = alarmEl.volume ?? 1;
+const prevMuted = alarmEl.muted ?? false;
+ alarmEl.currentTime = 0;
+alarmEl.volume = 1;           // volume doesn't matter while muted
+alarmEl.muted = true;         // <— guarantee silence
+alarmEl.play().then(() => {
+   setTimeout(() => {
+     alarmEl.pause();
+     alarmEl.currentTime = 0;
+     alarmEl.muted = prevMuted;   // restore original muted state
+     alarmEl.volume = prevVol;    // restore volume
+   }, 120);
+ }).catch(() => {});
 }
 
   // Load reflections from localStorage
