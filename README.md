@@ -1,56 +1,40 @@
-# countdown-site
-This is a small front-end web project built to help me stay motivated as I near the end of my full-time job and fully dedicate myself to coding.
+# Until Then Timer
 
-- Project Purpose
+**Until Then Timer** is a calming countdown timer and reflection journal built with vanilla JavaScript. It’s designed to support people through in-between moments — whether you're counting down to something exciting, managing uncertainty, or simply trying to slow down and stay present.
 
-This project displays a countdown timer to July 30, 2025 — my final day at work. Below the timer, there's a reflection area where I can journal my thoughts day by day. Each reflection is saved locally in the browser and timestamped.
+This is the second project in my frontend portfolio, where I focused on creating something minimal, supportive, and emotionally grounded.
 
-This is a personal, beginner-friendly build designed to practice key web development skills while also serving as a motivational tool.
+### What It Does
+- Set a custom countdown timer (e.g. 30 minutes, 2 hours, 3 days)
+- Write reflections while the timer runs
+- Each journal entry is timestamped and saved in the browser
+- All data persists via local storage, even after refresh
 
-- Features
+### Why I Built This
+This project gave me space to explore calm, reflection, and stillness in the digital experience. I wanted to design something minimal and emotionally grounding — a tool to help users move through waiting, uncertainty, or transitions without pressure to be productive.
 
-Live countdown timer that updates every second.
+It was also a chance to deepen my JavaScript skills, practice working with local storage, and design a soft, supportive interface from the ground up.
 
-Reflection journaling area with textarea input and a submit button.
+### Tech Stack
+- HTML / CSS / JavaScript (Vanilla)
+- Local storage to persist data
+- Responsive design
 
-Reflections are saved to localStorage and persist across page reloads.
+### What’s Next
+- Add optional sound or visual animations for a more sensory experience
+- Let users export or save their journal entries
+- Explore building a React or mobile-friendly version
+- Add light/dark mode toggle
 
-When the countdown reaches zero, a celebration message appears with visual effects (like CSS-only confetti).
+### Try It Out
+[Live Site](https://untilthentimer.netlify.app/)
 
-- Built With
+### About Me
+I’m Alex Walker — a digital strategist turned frontend developer with a master’s in clinical social work. My work blends code, community, and care. I’m currently completing Skillcrush’s frontend program and looking for a junior dev role on a mission-driven team.
 
-HTML5
+Let’s build digital tools that help people feel more grounded, supported, and seen.
 
-CSS3 (with custom fonts and layout styling)
+This project was built independently with support from ChatGPT as a learning and debugging tool. Every line of code was reviewed and customized as part of my frontend development practice.
 
-Vanilla JavaScript (DOM manipulation, event listeners, localStorage, time/date calculations)
-
-- How AI Helped
-
-I built this project with significant support from ChatGPT. As I'm still in the learning phase of my journey, I asked ChatGPT to:
-
-Explain concepts in beginner-friendly terms
-
-Help debug my JavaScript errors
-
-Walk me through layout adjustments in CSS
-
-Provide structured practice, code reviews, and emotional encouragement
-
-AI didn’t write this whole thing for me. I had to understand each line, integrate everything, and troubleshoot along the way. I took breaks, hit roadblocks, and learned to branch my code thanks to the mistakes I made.
-
-This isn’t just a code demo — it’s a milestone.
-
-- What I Learned
-
-How to build a countdown using setInterval() and Date
-
-Basic use of localStorage to save and retrieve data
-
-Structuring HTML and CSS for layout consistency
-
-Debugging JavaScript with console.log()
-
-Using Git to manage commits, roll back changes, and restore working versions
-
-That version control can be emotionally helpful too :)
+—
+Alex Walker
