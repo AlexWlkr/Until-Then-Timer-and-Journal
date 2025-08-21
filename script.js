@@ -1,7 +1,7 @@
 window.addEventListener("DOMContentLoaded", function () {
    let countdownInterval;
-   countdownDate = null;
-hasCelebrated = false; 
+   let countdownDate = null;
+  let hasCelebrated = false; 
 
  //alarm helpers
 function playAlarm() {
@@ -23,14 +23,24 @@ function playAlarm() {
  //prime audio on user gesture
 function primeAlarmAudio() {
 const alarmEl = document.getElementById("alarm");
- if (!alarmEl) return;
- const prevVol = alarmEl.volume;
-alarmEl.volume = 0;
-alarmEl.play().then(() => {
-alarmEl.pause();
-alarmEl.currentTime = 0;
-alarmEl.volume = prevVol;
- }).catch(() => {});
+
+   // Try to load metadata
+  alarmEl.load();
+
+  // Near-silent blip for ~100ms, then pause
+  const prevVol = alarmEl.volume ?? 1;
+  alarmEl.muted = false;
+  alarmEl.volume = Math.min(prevVol, 0.01);
+
+  alarmEl.play().then(() => {
+    setTimeout(() => {
+      alarmEl.pause();
+      alarmEl.currentTime = 0;
+      alarmEl.volume = prevVol;
+    }, 120);
+  }).catch(err => {
+    console.warn("Prime failed (likely no user gesture yet):", err);
+  });
 }
 
   // Load reflections from localStorage
