@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background: url('./assets/dopamine-background.png') no-repeat center center fixed;
@@ -11,6 +15,8 @@ body {
   align-items: center;
   color: #222;
 }
+
+
 
 /* HEADLINE */
 h1 {
@@ -143,4 +149,11 @@ h3 {
 .reflection-entry small {
   font-size: 0.85rem;
   color: #555;
+}
+
+#countdown-container,
+#reflection-section,
+#reflection-list {
+  width: 100%;
+  max-width: 600px;
 }
