@@ -1,5 +1,28 @@
 window.addEventListener("DOMContentLoaded", function () {
    let countdownInterval;
+   countdownDate = null;
+hasCelebrated = false; 
+
+ //alarm helpers
+function playAlarm() {
+const alarmEl = document.getElementById("alarm");
+   if (!alarmEl) return;
+   alarmEl.currentTime = 0;
+   alarmEl.play().catch(() => {});
+ }
+
+ //prime audio on user gesture
+ function primeAlarmAudio() {
+   const alarmEl = document.getElementById("alarm");
+  if (!alarmEl) return;
+   const prevVol = alarmEl.volume;
+   alarmEl.volume = 0;
+   alarmEl.play().then(() => {
+     alarmEl.pause();
+     alarmEl.currentTime = 0;
+     alarmEl.volume = prevVol;
+   }).catch(() => {});
+ }
 
   // Load reflections from localStorage
   const savedReflections = JSON.parse(localStorage.getItem("reflections")) || [];
@@ -11,7 +34,6 @@ window.addEventListener("DOMContentLoaded", function () {
   });
 
   // and validate saved countdown date from localStorage
-let countdownDate = null;
 const storedDate = localStorage.getItem("countdownDate");
 
 if (storedDate) {
@@ -30,6 +52,11 @@ if (storedDate) {
       document.getElementById("days").textContent = "00";
       document.getElementById("hours").textContent = "00";
       document.getElementById("minutes").textContent = "00";
+      clearInterval(countdownInterval);        
+      if (!hasCelebrated) {                    
+        hasCelebrated = true;                  
+        playAlarm();                          
+      }
       return;
     }
 
@@ -43,7 +70,8 @@ if (storedDate) {
   }
 
   // Start the countdown loop
-if (countdownDate) {
+if (countdownDate && countdownDate - new Date() > 0) {
+  hasCelebrated = false;
   updateCountdown();
   countdownInterval = setInterval(updateCountdown, 1000);
 }
@@ -72,7 +100,14 @@ if (countdownDate) {
 
     countdownDate = new Date(userDate);
     localStorage.setItem("countdownDate", countdownDate.toString());
+    //reset state and interval
+    hasCelebrated = false;
+    clearInterval(countdownInterval);
+
+    //prime audio on user gesture
+    primeAlarmAudio();
     updateCountdown();
+    countdownInterval = setInterval(updateCountdown, 1000);
   });
 
   // Clear timer and reflections
