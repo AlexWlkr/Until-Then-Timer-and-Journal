@@ -1,5 +1,34 @@
 window.addEventListener("DOMContentLoaded", function () {
    let countdownInterval;
+   let countdownDate = null;
+   let hasCelebrated = false;
+
+// Alarm helper functions//
+function playAlarm() {
+  const alarmEl = document.getElementById("alarm");
+  if (!alarmEl) { console.warn("No <audio id='alarm'> found."); return; }
+  alarmEl.muted = false;
+  alarmEl.volume = 1;          // make sure it’s audible
+  alarmEl.currentTime = 0;
+  const p = alarmEl.play();
+  if (p && p.catch) p.catch(err => console.warn("Alarm play() failed:", err));
+}
+// Try to unlock audio playback permission on a user gesture
+function primeAlarmAudio() {
+  const alarmEl = document.getElementById("alarm");
+  if (!alarmEl) return;
+  alarmEl.load();              // ensure it’s ready
+  const prevVol = alarmEl.volume ?? 1;
+  alarmEl.muted = false;
+  alarmEl.volume = 0.01;       // near-silent blip to unlock
+  alarmEl.play().then(() => {
+    setTimeout(() => {
+      alarmEl.pause();
+      alarmEl.currentTime = 0;
+      alarmEl.volume = prevVol;
+    }, 120);
+  }).catch(err => console.warn("Prime failed:", err));
+}
 
   // Load reflections from localStorage
   const savedReflections = JSON.parse(localStorage.getItem("reflections")) || [];
@@ -11,7 +40,6 @@ window.addEventListener("DOMContentLoaded", function () {
   });
 
   // and validate saved countdown date from localStorage
-let countdownDate = null;
 const storedDate = localStorage.getItem("countdownDate");
 
 if (storedDate) {
@@ -30,6 +58,11 @@ if (storedDate) {
       document.getElementById("days").textContent = "00";
       document.getElementById("hours").textContent = "00";
       document.getElementById("minutes").textContent = "00";
+      clearInterval(countdownInterval);        
+   if (!hasCelebrated) {                   
+    hasCelebrated = true;                
+    playAlarm();                        
+   }
       return;
     }
 
@@ -43,10 +76,11 @@ if (storedDate) {
   }
 
   // Start the countdown loop
-if (countdownDate) {
-  updateCountdown();
-  countdownInterval = setInterval(updateCountdown, 1000);
-}
+if (countdownDate && countdownDate - new Date() > 0) {
+    hasCelebrated = false;
+    updateCountdown();
+    countdownInterval = setInterval(updateCountdown, 1000);
+  }
 
   // Reflection submit
   document.getElementById("submit-reflection").addEventListener("click", function () {
@@ -72,7 +106,12 @@ if (countdownDate) {
 
     countdownDate = new Date(userDate);
     localStorage.setItem("countdownDate", countdownDate.toString());
+    hasCelebrated = false;
+    clearInterval(countdownInterval);
+    primeAlarmAudio();
     updateCountdown();
+    countdownInterval = setInterval(updateCountdown, 1000);
+
   });
 
   // Clear timer and reflections
