@@ -45,10 +45,43 @@ window.addEventListener("DOMContentLoaded", function () {
       })
       .catch(() => {});
   }
+  // Local storage helpers
+  const COUNTDOWN_KEY = "countdownMs"; 
+  const REFLECTIONS_KEY = "reflections";
+
+  function saveCountdownMs(ms) {
+    localStorage.setItem(COUNTDOWN_KEY, String(ms)); // **store as epoch ms**
+  }
+  function loadCountdownMs() {
+    const raw = localStorage.getItem(COUNTDOWN_KEY);
+    const n = raw ? Number(raw) : NaN;
+    return Number.isFinite(n) ? n : null; // **safer parse**
+  }
+
+    // Datetime parsing
+ function parseLocalDateTime(dtString) {
+    const [datePart, timePart] = dtString.split("T");
+    if (!datePart || !timePart) return null;
+    const [y, m, d] = datePart.split("-").map(Number);
+    const [hh, mm] = timePart.split(":").map(Number);
+    return new Date(y, (m || 1) - 1, d || 1, hh || 0, mm || 0, 0, 0); // **explicit local parse**
+  }
+
+      // UI confirmation
+
+      function showSetConfirmation(targetMs) {
+    const el = document.getElementById("countdown-input");
+    if (!el) return;
+    el.setCustomValidity("");
+    el.reportValidity();
+    el.setCustomValidity(`Timer set for ${new Date(targetMs).toLocaleString()}`); // **confirm set**
+    setTimeout(() => el.setCustomValidity(""), 1500);
+  }
+
 
   // Load reflections from localStorage
   const savedReflections =
-    JSON.parse(localStorage.getItem("reflections")) || [];
+    JSON.parse(localStorage.getItem("REFLECTIONS_KEY")) || [];
   savedReflections.forEach((entry) => {
     const reflectionItem = document.createElement("div");
     reflectionItem.classList.add("reflection-entry");
@@ -57,11 +90,10 @@ window.addEventListener("DOMContentLoaded", function () {
   });
 
   // validate saved countdown date from localStorage
-  const storedDate = localStorage.getItem("countdownDate");
-
-  if (storedDate) {
-    const parsedDate = new Date(storedDate);
-    if (!isNaN(parsedDate.getTime())) {
+const storedMs = localStorage.getItem("countdownMs");
+  if (storedMs && !isNaN(Number(storedMs))) {
+    const parsedDate = new Date(Number(storedMs));
+    if (!isNaN(parsedDate.getTime()) && parsedDate > Date.now()) {
       countdownDate = parsedDate;
     }
   }
@@ -88,6 +120,7 @@ window.addEventListener("DOMContentLoaded", function () {
       (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
     );
     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+     const secondsLeft = Math.floor((difference % (1000 * 60)) / 1000); 
 
     if (days === 0 && hours === 0 && minutes === 0) {
       document.getElementById("days").textContent = "00";
@@ -172,6 +205,10 @@ window.addEventListener("DOMContentLoaded", function () {
     document.getElementById("days").textContent = "00";
     document.getElementById("hours").textContent = "00";
     document.getElementById("minutes").textContent = "00";
+
+     // Reset Minutes label if it was switched to Seconds
+    const minutesLabelEl = document.querySelector("#minutes + .label");
+    if (minutesLabelEl) minutesLabelEl.textContent = "Minutes";
 
     // Clear reflections and input box
     document.getElementById("reflection-list").innerHTML = "";
