@@ -11,7 +11,7 @@ window.addEventListener("DOMContentLoaded", function () {
       return;
     }
     alarmEl.muted = false; // ensures sound is not muted
-    alarmEl.volume = 1; // ensures sound is audible 
+    alarmEl.volume = 1; // ensures sound is audible
     alarmEl.currentTime = 0;
 
     const p = alarmEl.play();
@@ -46,7 +46,7 @@ window.addEventListener("DOMContentLoaded", function () {
       .catch(() => {});
   }
   // Local storage helpers
-  const COUNTDOWN_KEY = "countdownMs"; 
+  const COUNTDOWN_KEY = "countdownMs";
   const REFLECTIONS_KEY = "reflections";
 
   function saveCountdownMs(ms) {
@@ -58,8 +58,8 @@ window.addEventListener("DOMContentLoaded", function () {
     return Number.isFinite(n) ? n : null; // **safer parse**
   }
 
-    // Datetime parsing
- function parseLocalDateTime(dtString) {
+  // Datetime parsing
+  function parseLocalDateTime(dtString) {
     const [datePart, timePart] = dtString.split("T");
     if (!datePart || !timePart) return null;
     const [y, m, d] = datePart.split("-").map(Number);
@@ -67,16 +67,17 @@ window.addEventListener("DOMContentLoaded", function () {
     return new Date(y, (m || 1) - 1, d || 1, hh || 0, mm || 0, 0, 0); // **explicit local parse**
   }
 
-      // UI confirmation
-      function showSetConfirmation(targetMs) {
+  // UI confirmation
+  function showSetConfirmation(targetMs) {
     const el = document.getElementById("countdown-input");
     if (!el) return;
     el.setCustomValidity("");
     el.reportValidity();
-    el.setCustomValidity(`Timer set for ${new Date(targetMs).toLocaleString()}`); // **confirm set**
+    el.setCustomValidity(
+      `Timer set for ${new Date(targetMs).toLocaleString()}`
+    ); // **confirm set**
     setTimeout(() => el.setCustomValidity(""), 1500);
   }
-
 
   // Load reflections from localStorage
   const savedReflections =
@@ -89,7 +90,7 @@ window.addEventListener("DOMContentLoaded", function () {
   });
 
   // validate saved countdown date from localStorage
- const storedMs = loadCountdownMs();
+  const storedMs = loadCountdownMs();
   if (storedMs && storedMs > Date.now()) {
     const parsedDate = new Date(storedMs);
     if (!isNaN(parsedDate.getTime())) {
@@ -119,20 +120,28 @@ window.addEventListener("DOMContentLoaded", function () {
       (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
     );
     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-     const secondsLeft = Math.floor((difference % (1000 * 60)) / 1000); 
+    const secondsLeft = Math.floor((difference % (1000 * 60)) / 1000);
 
- if (difference < 60_000) {
-      document.getElementById("minutes").textContent = String(secondsLeft).padStart(2, "0");
+    if (difference < 60_000) {
+      document.getElementById("minutes").textContent = String(
+        secondsLeft
+      ).padStart(2, "0");
       const minutesLabelEl = document.querySelector("#minutes + .label");
       if (minutesLabelEl) minutesLabelEl.textContent = "Seconds";
     } else {
-      document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+      document.getElementById("minutes").textContent = String(minutes).padStart(
+        2,
+        "0"
+      );
       const minutesLabelEl = document.querySelector("#minutes + .label");
       if (minutesLabelEl) minutesLabelEl.textContent = "Minutes";
     }
 
     document.getElementById("days").textContent = String(days).padStart(2, "0");
-    document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+    document.getElementById("hours").textContent = String(hours).padStart(
+      2,
+      "0"
+    );
   }
 
   // Start the countdown loop
@@ -155,7 +164,8 @@ window.addEventListener("DOMContentLoaded", function () {
       reflectionItem.innerHTML = `<p>${reflectionText}</p><small>${timestamp}</small>`;
       document.getElementById("reflection-list").appendChild(reflectionItem);
 
-      let reflections = JSON.parse(localStorage.getItem("REFLECTIONS_KEY")) || [];
+      let reflections =
+        JSON.parse(localStorage.getItem("REFLECTIONS_KEY")) || [];
       reflections.push({ text: reflectionText, timestamp });
       localStorage.setItem("REFLECTIONS_KEY", JSON.stringify(reflections));
       document.getElementById("reflection").value = "";
@@ -168,13 +178,13 @@ window.addEventListener("DOMContentLoaded", function () {
       const userDate = document.getElementById("countdown-input").value;
       if (!userDate) return;
 
-    // afer parse for datetime-local
+      // afer parse for datetime-local
       const parsed = parseLocalDateTime(userDate);
       if (!parsed || isNaN(parsed.getTime())) return;
       countdownDate = parsed;
 
       // store as ms via helper
-       saveCountdownMs(countdownDate.getTime());
+      saveCountdownMs(countdownDate.getTime());
 
       //reset state and interval
       hasCelebrated = false;
@@ -182,16 +192,16 @@ window.addEventListener("DOMContentLoaded", function () {
 
       //prime audio on user gesture
       primeAlarmAudio();
-  
+
       showSetConfirmation(countdownDate.getTime());
       updateCountdown();
-countdownInterval = setInterval(updateCountdown, 1000);
-  });
+      countdownInterval = setInterval(updateCountdown, 1000);
+    });
 
   // Clear timer and reflections
   document.getElementById("clear-timer").addEventListener("click", function () {
     // Clear all saved data
- localStorage.removeItem(COUNTDOWN_KEY);
+    localStorage.removeItem(COUNTDOWN_KEY);
     localStorage.removeItem(REFLECTIONS_KEY);
 
     // Stop the countdown timer from running
@@ -205,7 +215,7 @@ countdownInterval = setInterval(updateCountdown, 1000);
     document.getElementById("hours").textContent = "00";
     document.getElementById("minutes").textContent = "00";
 
-     // Reset Minutes label if it was switched to Seconds
+    // Reset Minutes label if it was switched to Seconds
     const minutesLabelEl = document.querySelector("#minutes + .label");
     if (minutesLabelEl) minutesLabelEl.textContent = "Minutes";
 
