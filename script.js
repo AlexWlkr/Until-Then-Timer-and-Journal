@@ -10,8 +10,8 @@ window.addEventListener("DOMContentLoaded", function () {
       console.warn("No <audio id='alarm'> element found.");
       return;
     }
-    alarmEl.muted = false; // ensure not muted
-    alarmEl.volume = 1; // ensure audible (adjust if needed)
+    alarmEl.muted = false; // ensures sound is not muted
+    alarmEl.volume = 1; // ensures sound is audible 
     alarmEl.currentTime = 0;
 
     const p = alarmEl.play();
@@ -32,15 +32,15 @@ window.addEventListener("DOMContentLoaded", function () {
     const prevMuted = alarmEl.muted ?? false;
     alarmEl.currentTime = 0;
     alarmEl.volume = 1; // volume doesn't matter while muted
-    alarmEl.muted = true; // <— guarantee silence
+    alarmEl.muted = true; // true silence
     alarmEl
       .play()
       .then(() => {
         setTimeout(() => {
           alarmEl.pause();
           alarmEl.currentTime = 0;
-          alarmEl.muted = prevMuted; // restore original muted state
-          alarmEl.volume = prevVol; // restore volume
+          alarmEl.muted = prevMuted; // restores original muted state
+          alarmEl.volume = prevVol; // restores volume
         }, 120);
       })
       .catch(() => {});
@@ -56,7 +56,7 @@ window.addEventListener("DOMContentLoaded", function () {
     document.getElementById("reflection-list").appendChild(reflectionItem);
   });
 
-  // and validate saved countdown date from localStorage
+  // validate saved countdown date from localStorage
   const storedDate = localStorage.getItem("countdownDate");
 
   if (storedDate) {
