@@ -1,58 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Countdown to Freedom</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Countdown to Freedom</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<body>
-  <h1>Until Then</h1>
-  <div class ="instruction-container">
-  <h2>✨The space between now and next.✨</h2>
-<h3>Set a timer for any moment you're preparing for — a meeting, a deadline, a decision, or just a mental reset. 
-  While the clock counts down, use the space below to reflect, journal, or brain-dump whatever’s on your mind.
-Your thoughts will be saved with timestamps so you can revisit them later.</h3>
-</div>
-
-  <!-- TIMER SETTER -->
-<div id="timer-setup">
-  <label for="countdown-input">Pick your countdown date and time:</label>
-  <input type="datetime-local" id="countdown-input" />
-  <button id="set-countdown" class="btn btn-color-1">Set Timer</button>
-</div>
-
-  <!-- COUNTDOWN SECTION -->
-<div id="countdown-container">
-    <div class="countdown-item">
-      <span id="days" class="number">00</span>
-      <span class="label">Days</span>
+  <body>
+    <h1>Until Then</h1>
+    <div class="instruction-container">
+      <h2>✨The space between now and next.✨</h2>
+      <h3>
+        Set a timer for any moment you're preparing for — a meeting, a deadline,
+        a decision, or just a mental reset. While the clock counts down, use the
+        space below to reflect, journal, or brain-dump whatever’s on your mind.
+        Your thoughts will be saved with timestamps so you can revisit them
+        later.
+      </h3>
     </div>
-    <div class="countdown-item">
-      <span id="hours" class="number">00</span>
-      <span class="label">Hours</span>
+
+    <!-- TIMER SETTER -->
+    <div id="timer-setup">
+      <label for="countdown-input">Pick your countdown date and time:</label>
+      <input type="datetime-local" id="countdown-input" />
+      <button id="set-countdown" class="btn btn-color-1">Set Timer</button>
     </div>
-    <div class="countdown-item">
-      <span id="minutes" class="number">00</span>
-      <span class="label">Minutes</span>
+
+    <!-- COUNTDOWN SECTION -->
+    <div id="countdown-container">
+      <div class="countdown-item">
+        <span id="days" class="number">00</span>
+        <span class="label">Days</span>
+      </div>
+      <div class="countdown-item">
+        <span id="hours" class="number">00</span>
+        <span class="label">Hours</span>
+      </div>
+      <div class="countdown-item">
+        <span id="minutes" class="number">00</span>
+        <span class="label">Minutes</span>
+      </div>
     </div>
-  </div>
 
-  <!-- REFELCTION TEXT BOX SECTION -->
-  <div id="reflection-section">
-  <!-- Text Input -->
-  <textarea id="reflection" placeholder="☁️ What’s on your mind? (Saved with timestamp)"></textarea>
+    <!-- REFELCTION TEXT BOX SECTION -->
+    <div id="reflection-section">
+      <!-- Text Input -->
+      <textarea
+        id="reflection"
+        placeholder="☁️ What’s on your mind? (Saved with timestamp)"
+      ></textarea>
 
-  <!-- Submit Button -->
- <button id="submit-reflection" class="btn btn-color-1">Add Reflection</button>
-</div>
-  <!-- Reset Button -->
-<button id="clear-timer" class="btn btn-color-1">🔄 Reset</button>
-<!-- List of past reflections -->
-<div id="reflection-list"></div>
+      <!-- Submit Button -->
+      <button id="submit-reflection" class="btn btn-color-1">
+        Add Reflection
+      </button>
+    </div>
+    <!-- Reset Button -->
+    <button id="clear-timer" class="btn btn-color-1">🔄 Reset</button>
+    <!-- List of past reflections -->
+    <div id="reflection-list"></div>
 
-<audio id="alarm" src="./assets/glockenspiel-positive-realisation-om-fx-1-00-02.mp3" preload="auto"></audio>
-<script src="script.js"></script>
-
-</body>
+    <audio
+      id="alarm"
+      src="./assets/glockenspiel-positive-realisation-om-fx-1-00-02.mp3"
+      preload="auto"
+    ></audio>
+    <script src="script.js"></script>
+  </body>
+</html>
