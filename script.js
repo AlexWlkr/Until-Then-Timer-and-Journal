@@ -11,7 +11,7 @@ window.addEventListener("DOMContentLoaded", function () {
       return;
     }
     alarmEl.muted = false; // ensures sound is not muted
-    alarmEl.volume = 1; // ensures sound is audible 
+    alarmEl.volume = 1; // ensures sound is audible
     alarmEl.currentTime = 0;
 
     const p = alarmEl.play();
@@ -45,10 +45,43 @@ window.addEventListener("DOMContentLoaded", function () {
       })
       .catch(() => {});
   }
+  // Local storage helpers
+  const COUNTDOWN_KEY = "countdownMs";
+  const REFLECTIONS_KEY = "reflections";
+
+  function saveCountdownMs(ms) {
+    localStorage.setItem(COUNTDOWN_KEY, String(ms)); // **store as epoch ms**
+  }
+  function loadCountdownMs() {
+    const raw = localStorage.getItem(COUNTDOWN_KEY);
+    const n = raw ? Number(raw) : NaN;
+    return Number.isFinite(n) ? n : null; // **safer parse**
+  }
+
+  // Datetime parsing
+  function parseLocalDateTime(dtString) {
+    const [datePart, timePart] = dtString.split("T");
+    if (!datePart || !timePart) return null;
+    const [y, m, d] = datePart.split("-").map(Number);
+    const [hh, mm] = timePart.split(":").map(Number);
+    return new Date(y, (m || 1) - 1, d || 1, hh || 0, mm || 0, 0, 0); // **explicit local parse**
+  }
+
+  // UI confirmation
+  function showSetConfirmation(targetMs) {
+    const el = document.getElementById("countdown-input");
+    if (!el) return;
+    el.setCustomValidity("");
+    el.reportValidity();
+    el.setCustomValidity(
+      `Timer set for ${new Date(targetMs).toLocaleString()}`
+    ); // **confirm set**
+    setTimeout(() => el.setCustomValidity(""), 1500);
+  }
 
   // Load reflections from localStorage
   const savedReflections =
-    JSON.parse(localStorage.getItem("reflections")) || [];
+    JSON.parse(localStorage.getItem(REFLECTIONS_KEY)) || [];
   savedReflections.forEach((entry) => {
     const reflectionItem = document.createElement("div");
     reflectionItem.classList.add("reflection-entry");
@@ -57,10 +90,9 @@ window.addEventListener("DOMContentLoaded", function () {
   });
 
   // validate saved countdown date from localStorage
-  const storedDate = localStorage.getItem("countdownDate");
-
-  if (storedDate) {
-    const parsedDate = new Date(storedDate);
+  const storedMs = loadCountdownMs();
+  if (storedMs && storedMs > Date.now()) {
+    const parsedDate = new Date(storedMs);
     if (!isNaN(parsedDate.getTime())) {
       countdownDate = parsedDate;
     }
@@ -88,25 +120,25 @@ window.addEventListener("DOMContentLoaded", function () {
       (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
     );
     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const secondsLeft = Math.floor((difference % (1000 * 60)) / 1000);
 
-    if (days === 0 && hours === 0 && minutes === 0) {
-      document.getElementById("days").textContent = "00";
-      document.getElementById("hours").textContent = "00";
-      document.getElementById("minutes").textContent = "00";
-      clearInterval(countdownInterval);
-      if (!hasCelebrated) {
-        hasCelebrated = true;
-        playAlarm();
-      }
-      return;
+    if (difference < 60_000) {
+      document.getElementById("minutes").textContent = String(
+        secondsLeft
+      ).padStart(2, "0");
+      const minutesLabelEl = document.querySelector("#minutes + .label");
+      if (minutesLabelEl) minutesLabelEl.textContent = "Seconds";
+    } else {
+      document.getElementById("minutes").textContent = String(minutes).padStart(
+        2,
+        "0"
+      );
+      const minutesLabelEl = document.querySelector("#minutes + .label");
+      if (minutesLabelEl) minutesLabelEl.textContent = "Minutes";
     }
 
     document.getElementById("days").textContent = String(days).padStart(2, "0");
     document.getElementById("hours").textContent = String(hours).padStart(
-      2,
-      "0"
-    );
-    document.getElementById("minutes").textContent = String(minutes).padStart(
       2,
       "0"
     );
@@ -132,9 +164,10 @@ window.addEventListener("DOMContentLoaded", function () {
       reflectionItem.innerHTML = `<p>${reflectionText}</p><small>${timestamp}</small>`;
       document.getElementById("reflection-list").appendChild(reflectionItem);
 
-      let reflections = JSON.parse(localStorage.getItem("reflections")) || [];
+      let reflections =
+        JSON.parse(localStorage.getItem("REFLECTIONS_KEY")) || [];
       reflections.push({ text: reflectionText, timestamp });
-      localStorage.setItem("reflections", JSON.stringify(reflections));
+      localStorage.setItem("REFLECTIONS_KEY", JSON.stringify(reflections));
       document.getElementById("reflection").value = "";
     });
 
@@ -145,14 +178,22 @@ window.addEventListener("DOMContentLoaded", function () {
       const userDate = document.getElementById("countdown-input").value;
       if (!userDate) return;
 
-      countdownDate = new Date(userDate);
-      localStorage.setItem("countdownDate", countdownDate.toString());
+      // afer parse for datetime-local
+      const parsed = parseLocalDateTime(userDate);
+      if (!parsed || isNaN(parsed.getTime())) return;
+      countdownDate = parsed;
+
+      // store as ms via helper
+      saveCountdownMs(countdownDate.getTime());
+
       //reset state and interval
       hasCelebrated = false;
       clearInterval(countdownInterval);
 
       //prime audio on user gesture
       primeAlarmAudio();
+
+      showSetConfirmation(countdownDate.getTime());
       updateCountdown();
       countdownInterval = setInterval(updateCountdown, 1000);
     });
@@ -160,7 +201,8 @@ window.addEventListener("DOMContentLoaded", function () {
   // Clear timer and reflections
   document.getElementById("clear-timer").addEventListener("click", function () {
     // Clear all saved data
-    localStorage.clear();
+    localStorage.removeItem(COUNTDOWN_KEY);
+    localStorage.removeItem(REFLECTIONS_KEY);
 
     // Stop the countdown timer from running
     clearInterval(countdownInterval);
@@ -172,6 +214,10 @@ window.addEventListener("DOMContentLoaded", function () {
     document.getElementById("days").textContent = "00";
     document.getElementById("hours").textContent = "00";
     document.getElementById("minutes").textContent = "00";
+
+    // Reset Minutes label if it was switched to Seconds
+    const minutesLabelEl = document.querySelector("#minutes + .label");
+    if (minutesLabelEl) minutesLabelEl.textContent = "Minutes";
 
     // Clear reflections and input box
     document.getElementById("reflection-list").innerHTML = "";
